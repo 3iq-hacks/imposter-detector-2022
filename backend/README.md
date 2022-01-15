@@ -3,6 +3,8 @@
 Backend build with Flask, hosted on Google App Engine.
 Using [This blog](https://cloud.google.com/appengine/docs/standard/python3/building-app/writing-web-service) as reference.
 
+Flask [documentation](https://flask.palletsprojects.com/en/2.0.x/) was used as a reference
+
 ## Installation
 
 This app uses Python 3.9.9, so you need to either use that or use the virtual environment.
