@@ -3,6 +3,8 @@ from google.cloud import speech_v1p1beta1 as speech
 from google.cloud import storage
 import os
 import datetime
+from pathlib import Path
+
 
 def recognizeResponseToDict(res: speech.RecognizeResponse) -> Dict[str, any]:
     output = {

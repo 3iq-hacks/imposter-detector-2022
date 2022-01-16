@@ -2,11 +2,9 @@ import os
 from flask import *
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-from lib.utils import upload_blob, download_blob
 from speech import *
-from lib.utils import recognizeResponseToDict, cleanup
+from lib.utils import recognizeResponseToDict, upload_blob, download_blob
 from flask_cors import CORS
-
 load_dotenv()
 
 
@@ -17,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Google App Engine doesn't allow read/write to the file system, so we have to use the /tmp directory and google cloud storage
-app.config['UPLOAD_FOLDER'] = '/tmp' if os.environ['GAE_ENV'] == 'standard' else app.root_path + UPLOAD_FOLDER 
+app.config['UPLOAD_FOLDER'] = '/tmp/tmp_files' if os.environ['GAE_ENV'] == 'standard' else app.root_path + UPLOAD_FOLDER 
 
 def allowed_file_type(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -66,9 +64,9 @@ def upload_file():
 			# upload vine boom to cloud storage
 			blob_name = upload_blob('hacked-team-3iq-2.appspot.com', boomified, name)
 
-			# remove /tmp directory
+			# remove content in /tmp directory
 			if os.environ['GAE_ENV'] == 'standard':
-				os.remove('/tmp')
+				os.remove('/tmp/tmp_files')
 
 			response_data['file_name'] = blob_name
 
