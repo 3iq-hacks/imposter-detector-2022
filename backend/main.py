@@ -63,7 +63,6 @@ def download_file(name):
 	return make_response(jsonify(response_data), 200)
 
 
-
 # basically a CDN to deliver the files
 @app.route('/cdn/<name>')
 def deliver_file(name):

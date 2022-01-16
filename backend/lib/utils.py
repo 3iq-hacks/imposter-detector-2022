@@ -35,18 +35,3 @@ def cleanup(og: str, unboomified: str) -> str:
     os.remove(unboomified)
     os.rename(unboomified + '.boomified.wav', new_name)
     return new_name
-
-reanscript =  {
-    'transcript': 'sus sus amogus sus sus sus amogus sauce',
-    'confidence': 0.9715206027030945,
-    'words': [
-        {'word': 'sus', 'start_time': 0.7, 'end_time': 1.2},
-        {'word': 'sus', 'start_time': 1.2, 'end_time': 1.3},
-        {'word': 'amogus', 'start_time': 1.3, 'end_time': 2.0},
-        {'word': 'sus', 'start_time': 2.0, 'end_time': 3.2},
-        {'word': 'sus', 'start_time': 3.2, 'end_time': 3.3},
-        {'word': 'sus', 'start_time': 3.3, 'end_time': 3.8},
-        {'word': 'amogus', 'start_time': 3.8, 'end_time': 4.6},
-        {'word': 'sauce', 'start_time': 4.6, 'end_time': 5.6}
-    ]
-}

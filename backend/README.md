@@ -19,4 +19,8 @@ env $ pip install -r requirements.txt
 env $ python main.py
 ```
 
-##
+## Deploy
+
+```bash
+gcloud app deploy
+```
