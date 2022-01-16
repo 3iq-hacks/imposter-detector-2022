@@ -3,6 +3,7 @@ from flask import *
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from speech import *
+from lib.utils import recognizeResponseToDict, cleanup
 
 load_dotenv()
 
@@ -44,12 +45,32 @@ def upload_file():
 
 @app.route('/processed/<name>')
 def download_file(name):
+	originalFilePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
+	print(f'GET /processed/{name}: Retrieving filepath {originalFilePath}')
+	unBoomifiedFile, res = get_text_from_audio(originalFilePath)
+
+	if (isinstance(res, str)):
+		return make_response(res, 200)
+
+	boomified = add_vine_booms(unBoomifiedFile, res)
+	response_data = recognizeResponseToDict(res)
+
+	# removes files, except for boomified file
+	# also renames boomified file
+	cdnFileName = cleanup(originalFilePath, unBoomifiedFile)
+	response_data['file_name'] = cdnFileName.split('/')[-1]
+
+	return make_response(jsonify(response_data), 200)
+
+
+
+# basically a CDN to deliver the files
+@app.route('/cdn/<name>')
+def deliver_file(name):
 	filePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
-	print(f'GET /processed/{name}: Retrieving filepath {filePath}')
-	text = get_text_from_audio(filePath)
-	response = make_response(text, 200)
-	# response.mimetype = "text/plain"
-	return response
+	print(f'GET /cdn/{name}: Sending file {filePath}')
+
+	return send_file(filePath, as_attachment=False)
 
 
 if __name__ == '__main__':
