@@ -1,7 +1,4 @@
 import React, { useEffect, useState, useRef, Component } from "react";
-import { motion } from "framer-motion";
-import { bounce } from "react-animations";
-import styled, { keyframes } from "styled-components";
 import Head from "next/head";
 import Image, { ProgressBar } from "react-bootstrap";
 import MicRecorder from "mic-recorder-to-mp3";
