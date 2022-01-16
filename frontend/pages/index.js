@@ -10,6 +10,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import ReactAnimations from './bounce.js'
+import faded from './fade.js'
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -119,7 +120,7 @@ export default function Home() {
     
 
             <div style={{ display: 'flex', width: '100vw', justifyContent: 'center', alignItems: 'center', backgroundColor: '#9B0000', height:'100vh'}}>
-            <div id="left-container" style = {{paddingTop: '2rem', paddingBottom: 0, marginLeft: 0, marginBottom: 0,border:0, backgroundColor: '#9B0000'}}>
+            <div id="left-container" style = {{ paddingTop: '2rem', paddingBottom: 0, marginLeft: 0, marginBottom: 0,border:0, backgroundColor: '#9B0000'}}>
             <ReactAnimations source="/images/black.png" width={150} height={150} ></ReactAnimations>
             </div>
                 <div style={{ paddingLeft: 0, justifyContent: 'center', alignItems: 'center' }}>

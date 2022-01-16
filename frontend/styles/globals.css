@@ -29,14 +29,17 @@ a {
   padding:0;
   background-color: '#9B0000'
 }
+*/
 #left-container
 {
-  width: 100px;
-  float:left;
+  position: relative;
+  right: 400px;
+  bottom: 240px;
   padding: 0px;
   margin: 0px;
   background-color: '#9B0000'
 }
+/*
 #right-container
 {
   width: 100px;
