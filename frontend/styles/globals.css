@@ -4,6 +4,16 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    height: 100%;
+}
+
+#__next {
+  min-height: 100%;
+  background-color: #9B0000;
+}
+
+hr {
+  width: 100%;
 }
 
 a {
@@ -34,7 +44,6 @@ a {
   /*top: 2em;*/
   top: 50%;
   left: 2em;
-  background-color: '#9B0000';
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }

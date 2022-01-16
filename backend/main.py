@@ -56,8 +56,10 @@ def upload_file():
 			if (isinstance(res, str)):
 				return make_response(res, 200)
 
-			boomified = add_vine_booms(unBoomifiedFile, res)
+			boomified, triggerword_count, length = add_vine_booms(unBoomifiedFile, res)
 			response_data = recognizeResponseToDict(res)
+			response_data['count'] = triggerword_count
+			response_data['length'] = length
 
 			# removes files, except for boomified file
 			# also renames boomified file

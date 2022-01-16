@@ -39,8 +39,8 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 				# Boost recognition for the sake of this demo
 				# https://cloud.google.com/speech-to-text/docs/speech-adaptation
 				speech_contexts = [{
-					"phrases": ['sus', 'sussy', 'among us', 'among', 'amogus', 'amog'],
-					"boost": 17
+					"phrases": ['sus', 'sussy', 'among us', 'among', 'amogus', 'amog', 'among us in real life'],
+					"boost": 6
 				}, {
 					"phrases": ['sauce', 'amigos', 'saucy', 'chelsea'],
 					"boost": 0.01
@@ -77,8 +77,8 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 
 
 # add vine booms to the beginning of every word that's "sus"
-# returns the filepath of the boomified file
-def add_vine_booms(filepath:str, response: speech.RecognizeResponse) -> str:
+# returns the filepath of the boomified file, and the amount of trigger words, and the length (in seconds)
+def add_vine_booms(filepath:str, response: speech.RecognizeResponse) -> Tuple[str, int, float]:
 	"""
 	add vine booms to the beginning of every word that's "sus"
 	returns the filepath of the boomified file
@@ -92,9 +92,12 @@ def add_vine_booms(filepath:str, response: speech.RecognizeResponse) -> str:
 	original_file = AudioSegment.from_file(filepath)
 	vine_boom = AudioSegment.from_file('assets/vine_boom.wav').apply_gain(-1)
 
+	trigger_words = 0
+
 	for word in response.results[0].alternatives[0].words:
-		if word.word in {'sus', 'sussy', 'among us', 'amogus'}:
+		if word.word.lower() in {'sus', 'sussy', 'among', 'amogus'}:
 			original_file = original_file.overlay(vine_boom, position = word.end_time.total_seconds() * 1000)
+			trigger_words += 1
 
 	original_file.export(f'{filepath}.boomified.wav', format="wav")
-	return f'{filepath}.boomified.wav'
+	return f'{filepath}.boomified.wav', trigger_words, len(original_file) / 1000
