@@ -2,10 +2,12 @@ import speech_recognition # Speech recognition library
 from moviepy.editor import * # Video editing library
 from pydub import AudioSegment
 import os
+import json
 
 
 
-GOOGLE_SPEECH_API_KEY = None # todo Get Google Speech Recognition API key (it'll still work without)
+
+GOOGLE_SPEECH_API_KEY = './service-account.json' # todo Get Google Speech Recognition API key (it'll still work without)
 
 
 def convert_video_to_audio(filepath:str, newfilepath:str):
@@ -18,12 +20,13 @@ def get_text_from_audio(filepath:str):
 		filepath = os.path.normcase(filepath)
 		print(f'Converting {filepath} to wav')
 		sound = AudioSegment.from_mp3(filepath)
-		sound.export("test.wav", format="wav")
+		sound.export(f'{filepath}.converted.wav', format="wav")
 
 	speechRecognizer = speech_recognition.Recognizer()
-	with speech_recognition.AudioFile(filepath) as source:
+	with speech_recognition.AudioFile(f'{filepath}.converted.wav') as source:
 		try:
-			text = speechRecognizer.recognize_google(speechRecognizer.record(source), key = GOOGLE_SPEECH_API_KEY)
+			# Don't need the credentials_json because GOOGLE_APPLICATION_CREDNETIALS is set
+			text = speechRecognizer.recognize_google_cloud(speechRecognizer.record(source))
 		except speech_recognition.UnknownValueError as no_speech:
 			return "> No speech detected"
 		return text

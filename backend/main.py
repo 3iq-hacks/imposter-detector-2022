@@ -1,10 +1,14 @@
 import os
 from flask import *
 from werkzeug.utils import secure_filename
-
+from dotenv import load_dotenv
 from speech import *
 
-UPLOAD_FOLDER = '\\files\\'
+load_dotenv()
+
+print(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+
+UPLOAD_FOLDER = '/files'
 ALLOWED_EXTENSIONS = {'mp4', 'mp3', 'wav'}
 
 app = Flask(__name__)
@@ -27,7 +31,7 @@ def upload_file():
 		if file and allowed_file_type(file.filename):
 			filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			return redirect(url_for('download_file', name=filename))
+			return redirect(url_for('download_file', name=secure_filename(file.filename)))
 	return'''
 	<!doctype html>
 	<title>Upload new File</title>
@@ -41,9 +45,11 @@ def upload_file():
 
 @app.route('/processed/<name>')
 def download_file(name):
-	text = get_text_from_audio(os.path.join(app.config['UPLOAD_FOLDER'], name))
+	filePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
+	print(f'GET /processed/{name}: Retrieving filepath {filePath}')
+	text = get_text_from_audio(filePath)
 	response = make_response(text, 200)
-	response.mimetype = "text/plain"
+	# response.mimetype = "text/plain"
 	return response
 
 
