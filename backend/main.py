@@ -6,7 +6,6 @@ from speech import *
 
 load_dotenv()
 
-print(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
 UPLOAD_FOLDER = '/files'
 ALLOWED_EXTENSIONS = {'mp4', 'mp3', 'wav'}
