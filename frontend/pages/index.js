@@ -20,19 +20,25 @@ export default function Home() {
     const [timer, setTimer] = useState("20");
     const [state, setState] = useState({
         isRecording: false,
-        blobURL: "",
+        blobURL: null,
+        boomedBlobURL: null,
         isBlocked: false,
         waitingServer: false,
-        ternaryState: "idle",
+        ternaryState: "idle", // 'idle', 'waiting', 'success'
+        error: "",
+        audioInfo: null // the data we get back from the server
     });
-    const [visible, setVisible] = React.useState(false);
 
+    //Record button function
     const start = () => {
         console.log("Start: state:", { state });
         if (state.isBlocked) {
             console.log("Permission Denied");
+
+        //Succcessful activation
         } else {
             Mp3Recorder.start()
+                //Start timer
                 .then(() => {
                     onClickReset();
                     setState({ ...state, isRecording: true });
@@ -42,22 +48,29 @@ export default function Home() {
         }
     };
 
+    //Stop recording button function
     const stop = async () => {
         try {
+            let newState = state;
+
             console.log("Stop: state:", { state });
+
             const [buffer, blob] = await Mp3Recorder.stop().getMp3();
             console.log(
                 `Uploading file to server: ${process.env.NEXT_PUBLIC_SERVER_URL}`
             );
-
+                
+            //Stop timer countdown
             clearTimer(getDeadTime() - 20);
             const blobURL = URL.createObjectURL(blob);
             setState({
                 ...state,
-                blobURL,
+                blobURL: blobURL,
                 isRecording: false,
                 waitingServer: true,
+                ternaryState: "waiting",
             });
+            newState.blobURL = blobURL;
 
             const file = new File([blob], "blobFile.mp3", {
                 type: "audio/mp3",
@@ -74,12 +87,40 @@ export default function Home() {
                     },
                 }
             );
+
+            console.log("data:", data);
+            if (!(data.data.error === 'No speech detected')) {
+                console.log(`Speech detected, querying cdn/${data.data.file_name}`)
+                const boomedAudio = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/cdn/${data.data.file_name}`, {
+                    responseType: 'blob'
+                });
+                const boomedUrl = URL.createObjectURL(new Blob([boomedAudio.data]));
+                newState.boomedBlobURL = boomedUrl;
+            } else {
+                console.log('No Speech detected.')
+            }
+
+            newState.ternaryState = "idle",
+            newState.waitingServer = false,
+            newState.isRecording = false,
+
             console.log("Uploaded file to server:", data);
+            console.log('State after successfully receiving data', newState);
+            setState(newState);
         } catch (e) {
+            setState({
+                ...state,
+                error: 'Error uploading file to server',
+                ternaryState: "idle",
+                waitingServer: false,
+                isRecording: false,
+            });
+            console.log('State after unsuccessfully receiving data', state);
             console.log(e);
         }
     };
 
+    //Ask for microphone permission
     useEffect(() => {
         navigator.getUserMedia(
             { audio: true },
@@ -127,7 +168,7 @@ export default function Home() {
 
     const getDeadTime = () => {
         let deadline = new Date();
-        deadline.setSeconds(deadline.getSeconds() + 21);
+        deadline.setSeconds(deadline.getSeconds() + 20);
         return deadline;
     };
 
@@ -147,32 +188,23 @@ export default function Home() {
                 <ReactAnimations source="/images/black.png" width={150} height={150} ></ReactAnimations>
             </div> */}
 
+            {/* Main div */}
             <div
                 style={{
                     display: "flex",
-                    width: "100vw",
+                    width: "100%",
                     justifyContent: "center",
                     alignItems: "center",
                     backgroundColor: "#9B0000",
-                    height: "130vh",
+                    padding: "2rem",
                 }}
             >
-                <div
-                    id="left-container"
-                    style={{
-                        paddingTop: "2rem",
-                        paddingBottom: 0,
-                        marginLeft: 0,
-                        marginBottom: 0,
-                        border: 0,
-                        backgroundColor: "#9B0000",
-                    }}
-                >
+                <div id="left-container">
                     <ReactAnimations
                         source="/images/black.png"
                         width={150}
                         height={150}
-                    ></ReactAnimations>
+                    />
                 </div>
                 <div
                     style={{
@@ -181,6 +213,7 @@ export default function Home() {
                         alignItems: "center",
                     }}
                 >
+                    {/* Main card */}
                     <Card
                         style={{
                             display: "flex",
@@ -202,7 +235,7 @@ export default function Home() {
                         >
                             SOMETHING SOUNDS SUS...
                         </Card.Header>
-                        <Card.Body>
+                        <Card.Body style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
                             <Card.Title>
                                 Record Audio (20 second limit)
                             </Card.Title>
@@ -217,40 +250,24 @@ export default function Home() {
                                 style={{ height: "8px" }}
                             />
                             <br />
-                            <Button
-                                id="start-button"
-                                variant="primary"
-                                size="lg"
-                                onClick={start}
-                                style={{
-                                    width: "170px",
-                                    marginRight: "100px",
-                                    transition: "width 2s",
-                                }}
-                                disabled={state.isRecording ? true : false}
-                            >
-                                {" "}
-                                <BsRecordCircle />{" "}
-                                {state.isRecording ? "Recording..." : "Record"}
-                            </Button>
-                            <Button
-                                id="stop-button"
-                                variant="danger"
-                                size="lg"
-                                onClick={stop}
-                                style={{ width: "170px" }}
-                                disabled={state.isRecording ? false : true}
-                            >
-                                {" "}
-                                <BsFillStopFill /> Stop
-                            </Button>
+                            <ViewButton state={state} startFun={start} stopFun={stop} />
                             <hr></hr>
-                            <Card.Title>Playback Audio</Card.Title>
-                            <Card.Text style={{ height: "30" }}>
-                                Listen and download your original audio
-                            </Card.Text>
-                            <audio src={state.blobURL} controls="controls" />
-                            <hr></hr>
+                            { state.blobURL && <>
+                                <Card.Title>Playback Audio</Card.Title>
+                                <Card.Text style={{ height: "30" }}>
+                                    Listen and download your original audio
+                                </Card.Text>
+                                <audio src={state.blobURL} controls="controls" />
+                                <hr></hr>
+                            </>}
+                            { state.boomedBlobURL && <>
+                                <Card.Title>Sussification</Card.Title>
+                                <Card.Text style={{ height: "30" }}>
+                                    Looks like we detected {}
+                                </Card.Text>
+                                <audio src={state.boomedBlobURL} controls="controls" />
+                                <hr></hr>
+                            </>}
                             <Card.Img
                                 src={"images/amogus.png"}
                                 style={{
@@ -263,6 +280,7 @@ export default function Home() {
                         </Card.Body>
                     </Card>
                     <br></br>
+                    {/* Results card */}
                     <Card
                         style={{
                             display: "flex",
@@ -302,3 +320,42 @@ export default function Home() {
         </>
     );
 }
+
+// state:idle, waiting, success, error
+const ViewButton = ({ state, startFun, stopFun }) => {
+    console.log('ViewButton state:', state);
+    let variant = state.ternaryState === "idle" ? "primary" : "success";
+    variant = state.ternaryState === "waiting" ? "caution" : variant;
+    variant = state.isRecording ? "danger" : variant;
+
+    let onClickCmd = state.isRecording ? stopFun : startFun;
+    onClickCmd = state.ternaryState === 'waiting' ? () => {} : onClickCmd; // if waiting, default to noop
+
+    let content;
+    if (state.ternaryState === "waiting") {
+        content = "Waiting...";
+    } else if (state.isRecording) {
+        content = <><BsFillStopFill /> Stop</>;
+    } else if (state.ternaryState === "idle") {
+        content = <><BsRecordCircle /> Record</>
+    } else {
+        content = <>Wuh oh</>
+    }
+    
+    return(
+        <Button
+            id="start-button"
+            variant={variant}
+            size="lg"
+            onClick={onClickCmd}
+            style={{
+                width: "170px",
+                margin: "auto",
+                transition: "width 2s",
+            }}
+            disabled={state.ternaryState === 'waiting'}
+        >
+            {content}
+        </Button>
+    );
+};

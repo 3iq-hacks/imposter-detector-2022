@@ -18,9 +18,7 @@ a {
 
 #start-button:hover, #stop-button:hover
 {
-    
     transform: scale(1.1);
-  
 }
 /*
 #middle-container
@@ -33,9 +31,12 @@ a {
 #left-container
 {
   position: absolute;
-  top: 2em;
-  left: 1em;
-  background-color: '#9B0000'
+  /*top: 2em;*/
+  top: 50%;
+  left: 2em;
+  background-color: '#9B0000';
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 /*
 #right-container
