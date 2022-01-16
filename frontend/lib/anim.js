@@ -1,8 +1,8 @@
-import { merge, tada, flip, fadeIn } from "react-animations";
+import { merge, flip, rotateOut } from "react-animations";
 import styled, { keyframes } from "styled-components";
 import React, { Component } from "react";
 
-const tadaFlip = merge(tada, flip);
+const tadaFlip = merge(rotateOut, flip);
 const Fade = styled.div`
     animation: 1s ${keyframes`${tadaFlip}`} infinite;
 `;
@@ -11,7 +11,7 @@ const Fade = styled.div`
 const Bounce = styled.div`
   animation: 1s ${bounceAnimation};
 `;*/
-class FadeAnimations extends Component {
+class Animations extends Component {
     render() {
         return (
             <Fade>
@@ -22,8 +22,8 @@ class FadeAnimations extends Component {
                     height={this.props.height}
                 />{" "}
             </Fade>
-            /* <Bounce> <h1> bounce   </h1></Bounce>*/
         );
     }
 }
-export default FadeAnimations;
+
+export default Animations;

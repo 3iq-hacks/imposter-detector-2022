@@ -1,24 +1,16 @@
-import React, { useEffect, useState, useRef, Component } from "react";
-import { motion } from "framer-motion";
-import { bounce } from "react-animations";
-import styled, { keyframes } from "styled-components";
+import React, { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Image, { ProgressBar } from "react-bootstrap";
 import MicRecorder from "mic-recorder-to-mp3";
 import { BsRecordCircle, BsFillStopFill } from "react-icons/bs";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import axios from "axios";
-import ReactAnimations from "./bounce.js";
-import FadeAnimations from "./fade.js";
-import faded from "./fade.js";
+import ReactAnimations from "@lib/bounce.js";
+import FadeAnimations from "@lib/fade.js";
 import ReactAudioPlayer from "react-audio-player";
 import { flattenWords } from "@lib/flatten";
-import Animations from "./anim.js";
+import Animations from "@lib/anim.js";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
