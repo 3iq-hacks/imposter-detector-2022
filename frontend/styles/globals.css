@@ -9,7 +9,9 @@ body {
 
 #__next {
   min-height: 100%;
-  background-color: #9B0000;
+  background-image: url("/images/bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 hr {
@@ -46,6 +48,24 @@ a {
   left: 2em;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+#right-container
+{
+  position: absolute;
+  /*top: 2em;*/
+  top: 50%;
+  right: 2em;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+
+#GreenImage
+{
+  position: absolute;
+  left: 5em;
+  top: 60%;
 }
 /*
 #right-container

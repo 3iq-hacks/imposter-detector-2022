@@ -9,6 +9,9 @@ import { BsRecordCircle, BsFillStopFill } from "react-icons/bs";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import axios from "axios";
 import ReactAnimations from "./bounce.js";
 import faded from "./fade.js";
@@ -205,12 +208,28 @@ export default function Home() {
                 }}
             >
                 <div id="left-container">
-                    <ReactAnimations
-                        source="/images/black.png"
-                        width={150}
-                        height={150}
-                    />
+                    <Container>
+                        <Row>
+                            <Col lg>
+                                <ReactAnimations
+                                    id="black-image"
+                                    source="/images/black.png"
+                                    width={140}
+                                    height={140}
+                                />
+                            </Col>
+                            <Col>
+                                <ReactAnimations
+                                    id="GreenImage"
+                                    source="/images/green.png"
+                                    width={140}
+                                    height={140}
+                                />
+                            </Col>
+                        </Row>
+                    </Container>
                 </div>
+
                 <div
                     style={{
                         paddingLeft: 0,
@@ -275,9 +294,9 @@ export default function Home() {
                                         Listen and download your original audio.
                                     </Card.Text>
                                     <Card.Text>
-                                        {state.boomedBlobURL
-                                            ? "Scroll down to see your results!"
-                                            : "Hmm, looks like no speech was detected. Maybe try to be better at speaking?"}
+                                        <CardTextTHingyASkjDHASKDJ
+                                            state={state}
+                                        />
                                     </Card.Text>
                                     <ReactAudioPlayer
                                         src={state.blobURL}
@@ -311,6 +330,30 @@ export default function Home() {
                                 boomedBlobURL={state.boomedBlobURL}
                             />
                         )}
+                </div>
+                <div id="right-container">
+                    <Container>
+                        <Row>
+                            <Col>
+                                {" "}
+                                <ReactAnimations
+                                    id="red-image"
+                                    source="/images/red.png"
+                                    height={140}
+                                    width={140}
+                                />
+                            </Col>
+                            <Col>
+                                {" "}
+                                <ReactAnimations
+                                    id="purple-image"
+                                    source="/images/purple.png"
+                                    height={140}
+                                    width={140}
+                                />
+                            </Col>
+                        </Row>
+                    </Container>
                 </div>
             </div>
         </>
@@ -400,8 +443,11 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
                 display: "flex",
                 width: "30rem",
                 backgroundColor: "#D3D3D3",
+                borderWidth: 4,
                 borderColor: "black",
                 borderRadius: "10px",
+                alignItems: "center",
+                gap: "1.5em",
             }}
         >
             <Card.Header
@@ -423,12 +469,12 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
                 }}
             >
                 <Card.Title>
-                    Download your sussified audio recording!
+                    Listen and download your sussified audio recording!
                 </Card.Title>
                 <ReactAudioPlayer
                     src={boomedBlobURL}
                     controls
-                    listenInterval={100}
+                    listenInterval={36}
                     onListen={(time) => setTime(time)}
                     onEnded={() => reset()} // reset image at the end
                 />
@@ -442,7 +488,23 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
             <Card.Text style={{ textAlign: "center" }}>
                 Detected {audioInfo.count} trigger word(s).
             </Card.Text>
-            <Card.Text>Data: {JSON.stringify(audioInfo)}</Card.Text>
+            <Card.Text style={{ textAlign: "center" }}>
+                {audioInfo.count == 0
+                    ? "NO SUS DETECTED. CREWMATE."
+                    : "YOU ARE SUSSY IMPOSTER!!"}
+            </Card.Text>
+            <Card.Img
+                src={
+                    audioInfo.count == 0
+                        ? "https://c.tenor.com/X24lJCALrgEAAAAd/rock-nodding.gif"
+                        : "https://c.tenor.com/iVv-SN7A168AAAAM/the-rock-dwayne-johnson.gif"
+                }
+                style={{
+                    width: "200px",
+                    alignItems: "center",
+                    borderRadius: "20px",
+                }}
+            />
             <Card.Img
                 src={imgSrc}
                 style={{
@@ -452,6 +514,18 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
                 }}
                 alt="amogus"
             />
+            <hr />
+            <Card.Text>Data: {JSON.stringify(audioInfo)}</Card.Text>
         </Card>
     );
+};
+
+const CardTextTHingyASkjDHASKDJ = ({ state }) => {
+    if (state.boomedBlobURL) {
+        return "Scroll down to see your results!";
+    } else if (state.waitingServer) {
+        return "Waiting for server...";
+    } else {
+        return "Hmm, looks like no speech was detected. Try speaking louder.";
+    }
 };
