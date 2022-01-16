@@ -32,11 +32,9 @@ a {
 */
 #left-container
 {
-  position: relative;
-  right: 400px;
-  bottom: 240px;
-  padding: 0px;
-  margin: 0px;
+  position: absolute;
+  top: 2em;
+  left: 1em;
   background-color: '#9B0000'
 }
 /*

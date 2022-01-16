@@ -23,6 +23,7 @@ export default function Home() {
         blobURL: "",
         isBlocked: false,
         waitingServer: false,
+        ternaryState: "idle",
     });
     const [visible, setVisible] = React.useState(false);
 
@@ -136,15 +137,15 @@ export default function Home() {
 
     return (
         <>
-            {/* <div id = "middle-container"></div> */}
-
-            {/* <div id = "right-container"> */}
-
             <Head>
                 <title>2022 Imposter Detector</title>
                 <meta name="description" content="Funni imposter detector" />
                 <link rel="icon" href="images/amogus.png" />
             </Head>
+
+            {/* <div id="left-container" style={{ paddingTop: "2rem", paddingBottom: 0, marginBottom: 0, border: 0, backgroundColor: "#9B0000", }} >
+                <ReactAnimations source="/images/black.png" width={150} height={150} ></ReactAnimations>
+            </div> */}
 
             <div
                 style={{
@@ -153,7 +154,7 @@ export default function Home() {
                     justifyContent: "center",
                     alignItems: "center",
                     backgroundColor: "#9B0000",
-                    height: "100vh",
+                    height: "130vh",
                 }}
             >
                 <div
