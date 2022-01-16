@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from speech import *
 from lib.utils import recognizeResponseToDict, cleanup
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -12,6 +13,7 @@ UPLOAD_FOLDER = '/files'
 ALLOWED_EXTENSIONS = {'mp4', 'mp3', 'wav'}
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['UPLOAD_FOLDER'] = app.root_path + UPLOAD_FOLDER
 
@@ -23,12 +25,21 @@ def allowed_file_type(filename):
 def upload_file():
 	if request.method == 'POST':
 		# check if the post request has the file part
+		print(request.files)
 		if 'file' not in request.files:
+			print('GET /: No Files!')
 			return redirect(request.url)
+		else:
+			print('GET /: Files!')
+
 		file = request.files['file']
 		if file.filename == '':
-			return redirect(request.url)
-		if file and allowed_file_type(file.filename):
+			print('GET /: No File Name!')
+			return make_response(jsonify({'error': 'No ilename'}), 400)
+		elif not allowed_file_type(file.filename):
+			print('GET /: Not Allowed File Type!', file.filename)
+			return make_response(jsonify({'error': 'File type not allowed'}), 400)
+		else:
 			filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			return redirect(url_for('download_file', name=secure_filename(file.filename)))

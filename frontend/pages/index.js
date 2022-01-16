@@ -9,7 +9,8 @@ import { BsRecordCircle, BsFillStopFill } from 'react-icons/bs'
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import ReactAnimations from './bounce.js'
+import ReactAnimations from './bounce.js';
+import axios from 'axios';
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -19,8 +20,10 @@ export default function Home() {
     const [state, setState] = useState({
         isRecording: false,
         blobURL: '',
-        isBlocked: false
+        isBlocked: false,
+        waitingServer: false
     });
+    const [visible, setVisible] = React.useState(false);
     
     const start = () => {
         console.log('Start: state:', { state })
@@ -37,16 +40,29 @@ export default function Home() {
         }
     };
     
-    const stop = () => {
-        console.log('Stop: state:', { state })
-        Mp3Recorder
-            .stop()
-            .getMp3()
-            .then(([buffer, blob]) => {
-                clearTimer(getDeadTime()-20);
-                const blobURL = URL.createObjectURL(blob)
-                setState({ ...state, blobURL, isRecording: false });
-            }).catch((e) => console.log(e));
+    const stop = async () => {
+        try {
+            console.log('Stop: state:', { state })
+            const [buffer, blob] = await Mp3Recorder.stop().getMp3();
+            console.log(`Uploading file to server: ${process.env.NEXT_PUBLIC_SERVER_URL}`);
+
+            clearTimer(getDeadTime()-20);
+            const blobURL = URL.createObjectURL(blob)
+            setState({ ...state, blobURL, isRecording: false, waitingServer: true });
+
+            const file = new File([blob], 'blobFile.mp3', { type: 'audio/mp3' });
+            const formData = new FormData()
+            formData.append('file', file, file.name)
+            console.log('formData:', formData);
+            const data = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },
+            })
+            console.log('Uploaded file to server:', data);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     useEffect(() => {
@@ -119,7 +135,7 @@ export default function Home() {
                 <link rel="icon" href="images/amogus.png" />
             </Head>
 
-            <div style={{ display: 'flex', width: '100vw', justifyContent: 'center', alignItems: 'center', backgroundColor: '#9B0000', height:'100vh'}}>
+            <div style={{ display: 'flex', width: '100vw', justifyContent: 'center', alignItems: 'center', backgroundColor: '#9B0000', height:'100vh', }}>
 
                 <div style={{ justifyContent: 'center', alignItems: 'center' }}>
                     
@@ -138,11 +154,21 @@ export default function Home() {
                             <hr></hr>
                             <Card.Title>Playback Audio</Card.Title>
                             <Card.Text style={{ height: '30' }}>
-                                Listen and download your sussy audio
+                                Listen and download your original audio
                             </Card.Text>
                             <audio src={state.blobURL} controls="controls"/>
                             <hr></hr>
-                            <Card.Img src={'images/amogus.png'} style={{borderRadius:'15px', borderWidth: '5px', borderColor: 'black'}} alt='amogus' width="512px" height="512px"/>
+                            <Card.Img src={'images/amogus.png'} style={{borderRadius:'15px', borderWidth: '5px', borderColor: 'black'}} alt='amogus'/>
+                        </Card.Body>
+                    </Card>
+                    <br></br>
+                    <Card style={{ display: 'flex',   width: '30rem', alignItems: 'center', backgroundColor:'#D3D3D3', borderWidth: 4, borderColor: 'black', borderRadius: '10px'}}>
+                        <Card.Header className="bg-dark text-white" style={{width: '100%', borderRadius: 5, fontSize: 30}}>RESULTS</Card.Header>
+                        <Card.Body>
+                            <Card.Title>Download your sussified audio recording!</Card.Title>
+                             {/* INSERT MP3 LINK */}
+                            <hr></hr>
+                            <Card.Title>Recording Statistics</Card.Title>
                         </Card.Body>
                     </Card>
                     
