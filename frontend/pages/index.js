@@ -116,7 +116,7 @@ export default function Home() {
         <Head>
                 <title>2022 Imposter Detector</title>
                 <meta name="description" content="Funni imposter detector" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="images/amogus.png" />
             </Head>
 
             <div style={{ display: 'flex', width: '100vw', justifyContent: 'center', alignItems: 'center', backgroundColor: '#9B0000', height:'100vh'}}>
