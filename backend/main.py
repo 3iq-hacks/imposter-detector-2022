@@ -42,16 +42,36 @@ def upload_file():
 		else:
 			filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			return redirect(url_for('download_file', name=secure_filename(file.filename)))
-	return'''
-	<!doctype html>
-	<title>Upload new File</title>
-	<h1>Upload new File</h1>
-	<form method=post enctype=multipart/form-data>
-	  <input type=file name=file>
-	  <input type=submit value=Upload>
-	</form>
-	'''
+
+			name = file.filename
+
+			# Convert file
+			originalFilePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
+			print(f'GET /processed/{name}: Retrieving filepath {originalFilePath}')
+			unBoomifiedFile, res = get_text_from_audio(originalFilePath)
+
+			if (isinstance(res, str)):
+				return make_response(res, 200)
+
+			boomified = add_vine_booms(unBoomifiedFile, res)
+			response_data = recognizeResponseToDict(res)
+
+			# removes files, except for boomified file
+			# also renames boomified file
+			cdnFileName = cleanup(originalFilePath, unBoomifiedFile)
+			response_data['file_name'] = cdnFileName.split('/')[-1]
+
+			return make_response(jsonify(response_data), 200)
+	else:
+		return'''
+		<!doctype html>
+		<title>Upload new File</title>
+		<h1>Upload new File</h1>
+		<form method=post enctype=multipart/form-data>
+		<input type=file name=file>
+		<input type=submit value=Upload>
+		</form>
+		'''
 
 
 @app.route('/processed/<name>')
