@@ -15,8 +15,6 @@ a {
   box-sizing: border-box;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
-<<<<<<< Updated upstream
-=======
 
 #start-button:hover, #stop-button:hover
 {
@@ -24,13 +22,13 @@ a {
     transform: scale(1.1);
   
 }
-/*#middle-container
+#middle-container
 {
   margin: 0;
   padding:0;
   background-color: '#9B0000'
-}*/
-/*#left-container
+}
+#left-container
 {
   width: 100px;
   float:left;
@@ -45,5 +43,4 @@ a {
   padding: 0px;
   margin: 0px;
   background-color: '#9B0000'
-}*/
->>>>>>> Stashed changes
+}
