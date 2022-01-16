@@ -3,3 +3,4 @@ moviepy==1.0.3
 pydub==0.25.1
 google_cloud_speech==2.11.1
 python-dotenv==0.19.2
+flask-cors==3.0.10
