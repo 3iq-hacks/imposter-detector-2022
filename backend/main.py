@@ -50,6 +50,9 @@ def upload_file():
 			print(f'GET /processed/{name}: Retrieving filepath {originalFilePath}')
 			unBoomifiedFile, res = get_text_from_audio(originalFilePath)
 
+			if (res == 'No speech detected'):
+				return make_response(jsonify({'error': 'No speech detected'}), 200)
+
 			if (isinstance(res, str)):
 				return make_response(res, 200)
 
@@ -72,26 +75,6 @@ def upload_file():
 		<input type=submit value=Upload>
 		</form>
 		'''
-
-
-@app.route('/processed/<name>')
-def download_file(name):
-	originalFilePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
-	print(f'GET /processed/{name}: Retrieving filepath {originalFilePath}')
-	unBoomifiedFile, res = get_text_from_audio(originalFilePath)
-
-	if (isinstance(res, str)):
-		return make_response(res, 200)
-
-	boomified = add_vine_booms(unBoomifiedFile, res)
-	response_data = recognizeResponseToDict(res)
-
-	# removes files, except for boomified file
-	# also renames boomified file
-	cdnFileName = cleanup(originalFilePath, unBoomifiedFile)
-	response_data['file_name'] = cdnFileName.split('/')[-1]
-
-	return make_response(jsonify(response_data), 200)
 
 
 # basically a CDN to deliver the files

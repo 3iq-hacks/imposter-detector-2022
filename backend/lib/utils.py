@@ -2,7 +2,7 @@ from typing import Dict
 from google.cloud import speech_v1p1beta1 as speech
 import os
 
-def recognizeResponseToDict(res: speech.RecognizeResponse) -> dict[str, any]:
+def recognizeResponseToDict(res: speech.RecognizeResponse) -> Dict[str, any]:
     output = {
         'transcript': '',
         'confidence': 0.0,

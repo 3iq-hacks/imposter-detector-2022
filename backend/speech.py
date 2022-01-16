@@ -51,6 +51,14 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 			response = "No speech detected"
 			return actualFilepath, response
 
+		print('response.results: ', response.results)
+		counter = 0
+		for _ in response.results:
+			counter += 1
+		if (counter == 0):
+			response = "No speech detected"
+			return actualFilepath, response
+
 		print('Response: ' + str(recognizeResponseToDict(response)))
 
 		alternative = response.results[0].alternatives[0] # only select the first alternative
