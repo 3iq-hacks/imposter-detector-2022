@@ -40,9 +40,9 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 				# https://cloud.google.com/speech-to-text/docs/speech-adaptation
 				speech_contexts = [{
 					"phrases": ['sus', 'sussy', 'among us', 'among', 'amogus', 'amog'],
-					"boost": 6
+					"boost": 17
 				}, {
-					"phrases": ['sauce', 'amigos'],
+					"phrases": ['sauce', 'amigos', 'saucy', 'chelsea'],
 					"boost": 0.01
 				}],
 				show_all=True
@@ -93,7 +93,7 @@ def add_vine_booms(filepath:str, response: speech.RecognizeResponse) -> str:
 	vine_boom = AudioSegment.from_file('assets/vine_boom.wav').apply_gain(-1)
 
 	for word in response.results[0].alternatives[0].words:
-		if word.word == 'sus':
+		if word.word in {'sus', 'sussy', 'among us', 'amogus'}:
 			original_file = original_file.overlay(vine_boom, position = word.end_time.total_seconds() * 1000)
 
 	original_file.export(f'{filepath}.boomified.wav', format="wav")
