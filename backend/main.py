@@ -15,7 +15,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Google App Engine doesn't allow read/write to the file system, so we have to use the /tmp directory and google cloud storage
-app.config['UPLOAD_FOLDER'] = '/tmp/tmp_files' if os.environ['GAE_ENV'] == 'standard' else app.root_path + UPLOAD_FOLDER 
+app.config['UPLOAD_FOLDER'] = '/tmp/hacked-poopoo-tmp' if os.environ['GAE_ENV'] == 'standard' else app.root_path + UPLOAD_FOLDER 
+
 
 def allowed_file_type(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -23,6 +24,10 @@ def allowed_file_type(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+	# make the temp directory if it doesn't exist
+	if os.environ['GAE_ENV'] == 'standard':
+		os.mkdir('/tmp/hacked-poopoo-tmp') 
+
 	if request.method == 'POST':
 		# check if the post request has the file part
 		print(request.files)
@@ -66,7 +71,7 @@ def upload_file():
 
 			# remove content in /tmp directory
 			if os.environ['GAE_ENV'] == 'standard':
-				os.remove('/tmp/tmp_files')
+				os.remove('/tmp/hacked-poopoo-tmp')
 
 			response_data['file_name'] = blob_name
 
@@ -87,10 +92,17 @@ def upload_file():
 # sends over the GCB files
 @app.route('/cdn/<date>/<name>')
 def deliver_file(date, name):
+	# make the temp directory if it doesn't exist
+	if os.environ['GAE_ENV'] == 'standard':
+		os.mkdir('/tmp/hacked-poopoo-tmp')
+
 	filePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
 
 	print(f'GET /cdn/{date}/{name}: Downloading from GCB to {filePath}')
 	download_blob('hacked-team-3iq-2.appspot.com', f'{date}/{name}', filePath)
+
+	if os.environ['GAE_ENV'] == 'standard':
+		os.remove('/tmp/hacked-poopoo-tmp')
 
 	return send_file(filePath, as_attachment=False)
 
