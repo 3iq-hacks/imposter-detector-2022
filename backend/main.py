@@ -6,6 +6,8 @@ from speech import *
 from lib.utils import recognizeResponseToDict, upload_blob, download_blob
 from flask_cors import CORS
 import shutil
+import pathlib
+
 load_dotenv()
 
 
@@ -27,7 +29,7 @@ def allowed_file_type(filename):
 def upload_file():
 	# make the temp directory if it doesn't exist
 	if os.environ['GAE_ENV'] == 'standard':
-		os.mkdir('/tmp/hacked-poopoo-tmp') 
+		pathlib.Path('/tmp/hacked-poopoo-tmp').mkdir(exist_ok=True)
 
 	if request.method == 'POST':
 		# check if the post request has the file part
@@ -95,7 +97,7 @@ def upload_file():
 def deliver_file(date, name):
 	# make the temp directory if it doesn't exist
 	if os.environ['GAE_ENV'] == 'standard':
-		os.mkdir('/tmp/hacked-poopoo-tmp')
+		pathlib.Path('/tmp/hacked-poopoo-tmp').mkdir(exist_ok=True)
 
 	filePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
 
