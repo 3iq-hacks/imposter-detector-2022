@@ -45,7 +45,7 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 					"phrases": ['sus', 'sussy', 'among us', 'among', 'amogus', 'amog', 'among us in real life'],
 					"boost": 6
 				}, {
-					"phrases": ['sauce', 'amigos', 'saucy', 'chelsea'],
+					"phrases": ['sauce', 'amigos', 'saucy', 'chelsea', 'ibaka'],
 					"boost": 0.01
 				}],
 				show_all=True
