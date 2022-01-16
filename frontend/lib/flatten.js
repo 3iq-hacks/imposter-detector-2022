@@ -24,7 +24,7 @@ export const flattenWords = (words) => {
         return [];
     }
 
-    const out = [{ time: words[0].end_time, type: "start" }];
+    const out = [{ time: triggerWords[0].end_time, type: "start" }];
 
     for (let i = 0; i < triggerWords.length - 1; i++) {
         // No overlap. Add another marker to the list

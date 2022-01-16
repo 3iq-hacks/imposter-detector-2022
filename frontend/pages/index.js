@@ -440,7 +440,7 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
                 {audioInfo.confidence.toString().substring(0, 8)} Confidence
             </Card.Text>
             <Card.Text style={{ textAlign: "center" }}>
-                Detected {audioInfo.count} trigger words.
+                Detected {audioInfo.count} trigger word(s).
             </Card.Text>
             <Card.Text>Data: {JSON.stringify(audioInfo)}</Card.Text>
             <Card.Img
