@@ -342,7 +342,7 @@ export default function Home() {
                         )}
                 </div>
                 <div id="right-container">
-                    / {/* <Container> */}
+                    {/* <Container> */}
                     {/* <Row>
                             <Col> */}{" "}
                     <table>
