@@ -9,8 +9,9 @@ import { BsRecordCircle, BsFillStopFill } from "react-icons/bs";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import ReactAnimations from "./bounce.js";
 import axios from "axios";
+import ReactAnimations from "./bounce.js";
+import faded from "./fade.js";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -152,7 +153,7 @@ export default function Home() {
                     justifyContent: "center",
                     alignItems: "center",
                     backgroundColor: "#9B0000",
-                    height: "120vh",
+                    height: "100vh",
                 }}
             >
                 <div
