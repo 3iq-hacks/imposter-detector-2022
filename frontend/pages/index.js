@@ -108,9 +108,7 @@ export default function Home() {
     return (
         <>
         {/* <div id = "middle-container"></div> */}
-        <div id="left-container" style = {{paddingTop: '2rem', paddingBottom: 0, marginBottom: 0,border:0, backgroundColor: '#9B0000'}}>
-            <ReactAnimations source="/images/black.png" width={150} height={150} ></ReactAnimations>
-        </div>
+      
         {/* <div id = "right-container"> */}
 
         <Head>
@@ -118,10 +116,13 @@ export default function Home() {
                 <meta name="description" content="Funni imposter detector" />
                 <link rel="icon" href="images/amogus.png" />
             </Head>
+    
 
             <div style={{ display: 'flex', width: '100vw', justifyContent: 'center', alignItems: 'center', backgroundColor: '#9B0000', height:'100vh'}}>
-
-                <div style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <div id="left-container" style = {{paddingTop: '2rem', paddingBottom: 0, marginLeft: 0, marginBottom: 0,border:0, backgroundColor: '#9B0000'}}>
+            <ReactAnimations source="/images/black.png" width={150} height={150} ></ReactAnimations>
+            </div>
+                <div style={{ paddingLeft: 0, justifyContent: 'center', alignItems: 'center' }}>
                     
                     <Card style={{ display: 'flex', width: '30rem', alignItems: 'center', backgroundColor:'#D3D3D3', borderWidth: 4, borderColor: 'black', borderRadius: '10px'}}>
                         <Card.Header className="bg-dark text-white" style={{width: '100%', borderRadius: 5, fontSize: 30}}>SOMETHING SOUNDS SUS...</Card.Header>
