@@ -24,6 +24,13 @@ This project uses Google's App Engine to convert speech to text and detect sus a
 - [Google App Engine](https://cloud.google.com/appengine)) to run the backend server.
 - [PyDub](https://github.com/jiaaro/pydub) to manipulate the audio files.
 
+## Pictures/gifs References
+
+- [Red Among Us PNG](https://www.graphicpie.com/wp-content/uploads/2020/11/red-among-us-png.png)
+- [Among Us Character Green](https://www.enjpg.com/img/2020/among-us-character-14.png)
+- [Rock Nodding](https://c.tenor.com/X24lJCALrgEAAAAd/rock-nodding.gif)
+- [Rock sus](https://c.tenor.com/iVv-SN7A168AAAAM/the-rock-dwayne-johnson.gif)
+
 ## Screenshots
 
 The website uses ReactJS and records audio, processes it, and returns the sussified audio clip.
