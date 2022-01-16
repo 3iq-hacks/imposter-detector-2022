@@ -2,6 +2,7 @@ import os
 from flask import *
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from lib.utils import upload_blob, download_blob
 from speech import *
 from lib.utils import recognizeResponseToDict, cleanup
 from flask_cors import CORS
@@ -10,12 +11,13 @@ load_dotenv()
 
 
 UPLOAD_FOLDER = '/files'
-ALLOWED_EXTENSIONS = {'mp4', 'mp3', 'wav'}
+ALLOWED_EXTENSIONS = { 'mp3', 'wav'}
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['UPLOAD_FOLDER'] = app.root_path + UPLOAD_FOLDER
+# Google App Engine doesn't allow read/write to the file system, so we have to use the /tmp directory and google cloud storage
+app.config['UPLOAD_FOLDER'] = '/tmp' if os.environ['GAE_ENV'] == 'standard' else app.root_path + UPLOAD_FOLDER 
 
 def allowed_file_type(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -61,10 +63,14 @@ def upload_file():
 			response_data['count'] = triggerword_count
 			response_data['length'] = length
 
-			# removes files, except for boomified file
-			# also renames boomified file
-			cdnFileName = cleanup(originalFilePath, unBoomifiedFile)
-			response_data['file_name'] = cdnFileName.split('/')[-1]
+			# upload vine boom to cloud storage
+			blob_name = upload_blob('hacked-team-3iq-2.appspot.com', boomified, name)
+
+			# remove /tmp directory
+			if os.environ['GAE_ENV'] == 'standard':
+				os.remove('/tmp')
+
+			response_data['file_name'] = blob_name
 
 			return make_response(jsonify(response_data), 200)
 	else:
@@ -80,10 +86,13 @@ def upload_file():
 
 
 # basically a CDN to deliver the files
-@app.route('/cdn/<name>')
-def deliver_file(name):
+# sends over the GCB files
+@app.route('/cdn/<date>/<name>')
+def deliver_file(date, name):
 	filePath = os.path.join(app.config['UPLOAD_FOLDER'], name)
-	print(f'GET /cdn/{name}: Sending file {filePath}')
+
+	print(f'GET /cdn/{date}/{name}: Downloading from GCB to {filePath}')
+	download_blob('hacked-team-3iq-2.appspot.com', f'{date}/{name}', filePath)
 
 	return send_file(filePath, as_attachment=False)
 

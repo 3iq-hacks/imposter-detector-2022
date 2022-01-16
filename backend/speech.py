@@ -39,6 +39,9 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 				# Boost recognition for the sake of this demo
 				# https://cloud.google.com/speech-to-text/docs/speech-adaptation
 				speech_contexts = [{
+					'phrases': ['The imposter is sus', 'among us in real life', 'you are a sussy baka'],
+					'boost': 12,
+				}, {
 					"phrases": ['sus', 'sussy', 'among us', 'among', 'amogus', 'amog', 'among us in real life'],
 					"boost": 6
 				}, {
@@ -90,6 +93,9 @@ def add_vine_booms(filepath:str, response: speech.RecognizeResponse) -> Tuple[st
 	"""
 	# Add the vine booms
 	original_file = AudioSegment.from_file(filepath)
+	second_of_silence = AudioSegment.silent(duration=1000) # or be explicit
+
+	original_file.append(second_of_silence)
 	vine_boom = AudioSegment.from_file('assets/vine_boom.wav').apply_gain(-1)
 
 	trigger_words = 0
