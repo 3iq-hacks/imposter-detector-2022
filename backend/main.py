@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from speech import *
 from lib.utils import recognizeResponseToDict, upload_blob, download_blob
 from flask_cors import CORS
+import shutil
 load_dotenv()
 
 
@@ -71,7 +72,7 @@ def upload_file():
 
 			# remove content in /tmp directory
 			if os.environ['GAE_ENV'] == 'standard':
-				os.remove('/tmp/hacked-poopoo-tmp')
+				shutil.rmtree('/tmp/hacked-poopoo-tmp')
 
 			response_data['file_name'] = blob_name
 
@@ -100,9 +101,6 @@ def deliver_file(date, name):
 
 	print(f'GET /cdn/{date}/{name}: Downloading from GCB to {filePath}')
 	download_blob('hacked-team-3iq-2.appspot.com', f'{date}/{name}', filePath)
-
-	if os.environ['GAE_ENV'] == 'standard':
-		os.remove('/tmp/hacked-poopoo-tmp')
 
 	return send_file(filePath, as_attachment=False)
 
