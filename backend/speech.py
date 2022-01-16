@@ -11,7 +11,6 @@ def convert_video_to_audio(filepath:str, newfilepath:str):
 	VideoFileClip(filepath).audio.write_audiofile(newfilepath, codec = "pcm_s32le")
 
 
-
 # Speech to text
 # returns (converted_filepath, response)
 def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.RecognizeResponse]]:
@@ -41,7 +40,7 @@ def get_text_from_audio(filepath: str) -> Tuple[str, Union[str, speech.Recognize
 				# https://cloud.google.com/speech-to-text/docs/speech-adaptation
 				speech_contexts = [{
 					"phrases": ['sus', 'sussy', 'among us', 'among', 'amogus', 'amog'],
-					"boost": 19.99
+					"boost": 6
 				}, {
 					"phrases": ['sauce', 'amigos'],
 					"boost": 0.01
@@ -87,7 +86,7 @@ def add_vine_booms(filepath:str, response: speech.RecognizeResponse) -> str:
 
 	for word in response.results[0].alternatives[0].words:
 		if word.word == 'sus':
-			original_file = original_file.overlay(vine_boom, position = ((word.start_time + word.end_time * 2) / 3).total_seconds() * 1000)
+			original_file = original_file.overlay(vine_boom, position = word.end_time.total_seconds() * 1000)
 
 	original_file.export(f'{filepath}.boomified.wav', format="wav")
 	return f'{filepath}.boomified.wav'
