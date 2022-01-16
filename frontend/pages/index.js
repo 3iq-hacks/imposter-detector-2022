@@ -14,9 +14,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import ReactAnimations from "./bounce.js";
+import FadeAnimations from "./fade.js";
 import faded from "./fade.js";
 import ReactAudioPlayer from "react-audio-player";
 import { flattenWords } from "@lib/flatten";
+import Animations from "./anim.js";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -208,26 +210,34 @@ export default function Home() {
                 }}
             >
                 <div id="left-container">
-                    <Container>
+                    {/* <Container>
                         <Row>
-                            <Col lg>
+                            <Col lg> */}
+                    <table>
+                        <tr>
+                            <th>
                                 <ReactAnimations
                                     id="black-image"
                                     source="/images/black.png"
                                     width={140}
                                     height={140}
                                 />
-                            </Col>
-                            <Col>
-                                <ReactAnimations
+                            </th>
+                            <th>
+                                {/* </Col>
+                            <Col> */}
+                                <Animations
                                     id="GreenImage"
                                     source="/images/green.png"
                                     width={140}
                                     height={140}
                                 />
-                            </Col>
+                            </th>
+                        </tr>
+                    </table>
+                    {/* </Col>
                         </Row>
-                    </Container>
+                    </Container> */}
                 </div>
 
                 <div
@@ -332,28 +342,34 @@ export default function Home() {
                         )}
                 </div>
                 <div id="right-container">
-                    <Container>
-                        <Row>
-                            <Col>
-                                {" "}
-                                <ReactAnimations
+                    / {/* <Container> */}
+                    {/* <Row>
+                            <Col> */}{" "}
+                    <table>
+                        <tr>
+                            <th>
+                                <FadeAnimations
                                     id="red-image"
                                     source="/images/red.png"
                                     height={140}
                                     width={140}
                                 />
-                            </Col>
-                            <Col>
-                                {" "}
+                            </th>
+                            <th>
+                                {/* </Col>
+                            <Col> */}{" "}
                                 <ReactAnimations
                                     id="purple-image"
                                     source="/images/purple.png"
                                     height={140}
                                     width={140}
                                 />
-                            </Col>
+                            </th>
+                        </tr>
+                    </table>
+                    {/* </Col>
                         </Row>
-                    </Container>
+                    </Container> */}
                 </div>
             </div>
         </>
@@ -482,8 +498,9 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
                 <Card.Title>Recording Statistics</Card.Title>
             </Card.Body>
             <Card.Text style={{ textAlign: "center" }}>
-                Transcript: '{audioInfo.transcript}' with{" "}
-                {audioInfo.confidence.toString().substring(0, 8)} Confidence
+                Transcript: "{audioInfo.transcript}" with{" "}
+                {audioInfo.confidence.toString().substring(0, 6) * 100}%
+                confidence
             </Card.Text>
             <Card.Text style={{ textAlign: "center" }}>
                 Detected {audioInfo.count} trigger word(s).
@@ -514,8 +531,6 @@ const ViewResults = ({ audioInfo, boomedBlobURL }) => {
                 }}
                 alt="amogus"
             />
-            <hr />
-            <Card.Text>Data: {JSON.stringify(audioInfo)}</Card.Text>
         </Card>
     );
 };
