@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from speech import *
 
 UPLOAD_FOLDER = '\\files\\'
-ALLOWED_EXTENSIONS = {'wav'}
+ALLOWED_EXTENSIONS = {'mp4', 'mp3', 'wav'}
 
 app = Flask(__name__)
 
@@ -13,6 +13,7 @@ app.config['UPLOAD_FOLDER'] = app.root_path + UPLOAD_FOLDER
 
 def allowed_file_type(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -24,7 +25,7 @@ def upload_file():
 		if file.filename == '':
 			return redirect(request.url)
 		if file and allowed_file_type(file.filename):
-			filename = secure_filename(file.filename)
+			filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			return redirect(url_for('download_file', name=filename))
 	return'''
