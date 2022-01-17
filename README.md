@@ -1,6 +1,6 @@
 # HackED 2022 Team 3IQ - 2022 Imposter Detector
 
-By Aneeljyot Alagh, Curtis Kan, Joshua Ji, Pratham Patel, Vedant Vyas, and William Tran.
+By Aneeljyot Alagh, Curtis Kan, Joshua Ji, Pratham Arura, Vedant Vyas, and William Tran.
 
 This project uses Google's App Engine to convert speech to text and detect sus audio. Pydub adds a funni vine boom sound effect every time there is a sus trigger word.
 
